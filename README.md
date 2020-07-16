@@ -1,35 +1,98 @@
-# SSR 项目介绍
+# React SSR 项目介绍
+
+从 0 - 1 搭建可用的 React SSR 项目，实现客户端和服务端渲染
+
+## 原理
+
+ReactDOM 提供了服务端渲染的 API
+
+基于`虚拟 Dom`，描述 dom 结构 的 js 对象，根据不同的平台来渲染。调用 `renderToString` & `renderToNodeStream` 将虚拟 dom 对象转换为 HTML 字符串
 
 ## 运行
 
-`npm run dev`执行客户端、服务端的文件打包，完成后再运行`node build/server.js`启动后台服务，浏览器打开`localhost:5000`
+git clone https://github.com/amelia-coding/my-react-ssr.git
 
-## TODO LIST
+npm install
 
-- [] 如何解决 ssr 的初始数据在 csr 接管后重复请求的问题
-- [] 前后端路由加入鉴权（路由导航卫士？）
-- [] api：服务端渲染数据请求、客户端 ajax、接口代理（对接后台）、跨域等
-- [] ejs 和 react 路由切换，数据通信
-- [] react 的 UI 库
-- [] 尽量使用 node/browser 兼容的库，避免环境不一样写的代码有 bug
-- [] 关注同构对 node 服务器性能的影响
-- [] 模拟 next.js 实现预加载数据的生命钩子
-- [] asyncData 可否获取 props 信息
-- [] code split
-- [] 脚手架：热更新、生产与开发环境区分配置、调试体验
-- [] 路由文件配置整理
-- [] koa 程序目录整理搭建
-- [] mobx
-- [] react-hemlet 定义头部信息
+### 客户端打包
 
-- [x] ts 改造
-- [] css treeshaking(purecss)
-- [] hmr 的引入
-- [] postcss 引入，必须设置 overrideBrowserslist
-- [] mock:开源的 yapi 可视化接口管理平台
-- [] docker 部署
+npm run dev
+
+#### 服务端运行
+
+先执行客户端打包在运行 server
+
+npm run build
+
+npm run server
+
+## 技术栈
+
+react16.x + react-router4 + webpack4
+
+- react
+- typescript
+- react-router-dom
+- react-router-config（路由匹配）
+- redux(数据管理)
+- redux-thunk(支持异步 Action)
+- react-helmet(Head 管理)
+- react-lazyload(图片懒加载)
+- loadable-components(代码分割)
+- cross-fetch(浏览器和 node 通用的 Fetch API)
+- koa(后端服务)
+
+## 要解决的问题
+
+- 路由同构
+- 状态数据同构
+- CSS 处理
+- 模块异步加载、代码分割、动态加载
+- fetch 同构
+- mock 数据
+- 跨域请求
+
+## 项目演进
+
+- 前后端路由加入鉴权（路由导航卫士）
+- 解决 ssr 的初始数据在 csr 接管后重复请求的问题
+- 服务端请求、客户端请求、跨域、接口代理（对接后台）等
+- 支持 CSS 模块化、Postcss
+- 模块异步加载
+- typecript 改造
+- ?? HMR 热更新
+
+## 业内成熟的框架
+
+- react nextjs
+- vue nuxtjs
+- razzle
+- umi
 
 ## 坑
 
-- connect(redux)/observer(mobx)会劫持 showComponentUpdate，使得路由更新时页面组件感知不到，需要套一层 withRouter(react-router-dom)解决，而且所有父元素都要套啊啊啊啊([官方解答](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/redux.md#blocked-updates))（[官宣 2](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md)）
-- `react-router-config`的`renderRoutes`也需要层层套，不能断裂，否则孙子组件无法渲染
+1. connect 和 withRouter，connect 会使得组件变为 purcomponent，withRouter 并没有对 router 进行任何处理
+
+```js
+withRouter(
+  connect(({ user, loading }) => ({
+    user,
+    loading,
+  }))(App),
+);
+```
+
+2. 引入 ts 后，@connect 和@withRouter 会报错
+
+手动修复 connect 和 withRouter
+
+## 总结
+
+优点
+
+服务端渲染的
+优势在于可以极快的首屏优化 ，支持 SEO，与传统的 SPA 相比多了一种数据的处理方式。
+
+缺点
+
+SSR 配置比较复杂，不仅仅是前后端的配置问题，还需要考虑后端性能，例如登录态、高并发、负载均衡、内存管理等，其主要是用于 SEO，不太建议用做服务端渲染，其能够使用的场景不多，而且成本代价太大
