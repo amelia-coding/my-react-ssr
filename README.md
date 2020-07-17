@@ -42,7 +42,9 @@ react16.x + react-router4 + webpack4
 - cross-fetch(浏览器和 node 通用的 Fetch API)
 - koa(后端服务)
 
-## 要解决的问题
+## 要解决和关注的问题
+
+解决
 
 - 路由同构
 - 状态数据同构
@@ -51,6 +53,10 @@ react16.x + react-router4 + webpack4
 - fetch 同构
 - mock 数据
 - 跨域请求
+
+关注
+
+- node 性能的影响（ssr 渲染将一部分渲染的压力放在了服务端）
 
 ## 项目演进
 
