@@ -9,7 +9,6 @@ import { RootState } from './store';
 interface StateProps {
   privilege: Array<string>;
 }
-
 type AppProps = StateProps;
 
 const App: React.FC<AppProps> = (props) => {

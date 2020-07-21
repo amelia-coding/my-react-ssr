@@ -53,10 +53,11 @@ react16.x + react-router4 + webpack4
 - fetch 同构
 - mock 数据
 - 跨域请求
+- ?? ssr和csr的随时切换
 
 关注
 
-- node 性能的影响（ssr 渲染将一部分渲染的压力放在了服务端）
+- ?? node 性能的影响（ssr 渲染将一部分渲染的压力放在了服务端）
 
 ## 项目演进
 

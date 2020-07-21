@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "concurrently 'npm:watch-*'",
+    "watch-clean": "rm -rf build && rm -rf public",
     "watch-client": "cross-env NODE_ENV=development webpack --config ./webpack.client.js",
     "watch-server": "cross-env NODE_ENV=development webpack --config ./webpack.server.js",
     "build": "concurrently 'npm:build-*'",
