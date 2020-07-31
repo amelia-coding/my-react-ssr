@@ -3,6 +3,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+const glob = require('glob');
+const path = require('path');
+
+const PATHS = {
+  src: path.join(__dirname, 'src'),
+};
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -73,6 +80,9 @@ module.exports = {
       filename: 'css/[name].[contenthash].css',
     }),
     new CleanWebpackPlugin(['build', 'public']),
+    new PurgecssPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
+    }),
   ],
   optimization: {
     // mode为production自动启用

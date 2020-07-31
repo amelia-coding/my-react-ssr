@@ -53,7 +53,7 @@ react16.x + react-router4 + webpack4
 - fetch 同构
 - mock 数据
 - 跨域请求
-- ?? ssr和csr的随时切换
+- ?? ssr 和 csr 的随时切换
 
 关注
 
@@ -103,3 +103,33 @@ withRouter(
 缺点
 
 SSR 配置比较复杂，不仅仅是前后端的配置问题，还需要考虑后端性能，例如登录态、高并发、负载均衡、内存管理等，其主要是用于 SEO，不太建议用做服务端渲染，其能够使用的场景不多，而且成本代价太大
+
+## 热更新原理
+
+```js
+// 1、修改入口文件，增加热更新文件
+clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app];
+clientConfig.output.filename = 'static/js/[name].[hash].js';
+clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+// 2、客户端打包
+const clientCompiler = webpack(clientConfig);
+
+const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+  publicPath: clientConfig.output.publicPath,
+  logLevel: 'warn',
+});
+// 3、使用 webpack-dev-middleware 中间件服务 webpack 打包后的资源文件
+app.use(devMiddleware);
+
+/src/lib/client/index.js负责websocket客户端hash和ok事件的监听，ok事件的回调只干了一件事发射webpackHotUpdate事件
+
+/src/lib/client/hot/dev-server.js负责监听webpackHotUpdate，调用hotCheck开始拉取代码，实现局部更新
+```
+
+## 性能优化
+
+treeshaking:深度 treeshaking webpack-deep-scope-plugin webpack-parallel-uglify-plugin purifycss-webpack purgecss-webpack-plugin
+
+开启多核压缩 happypack 多线程编译 webpack 不支持的情况下使用 thread-loader
+CSS 的多核压缩 optimize-css-assets-webpack-plugin
