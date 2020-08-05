@@ -133,3 +133,17 @@ treeshaking:深度 treeshaking webpack-deep-scope-plugin webpack-parallel-uglify
 
 开启多核压缩 happypack 多线程编译 webpack 不支持的情况下使用 thread-loader
 CSS 的多核压缩 optimize-css-assets-webpack-plugin
+
+## loadable 原理
+
+要实现服务端渲染
+
+我们需要根据路由找到当前要渲染的组件，通过 renderToString 转化成字符串拼接 html 返回，
+同时客户端也要能够再次渲染组件添加事件处理等，所以要找到当前页客户端渲染所需的 css 和 js 静态资源
+同时为了能够让客户端重用服务端直出的 html 结点，不再是先显示 loading 再显示组件，这样会造成冲突已经性能问题，
+就需要等待异步加载的组件加载完成后才开始渲染页面
+
+loadable:
+提供了一个 webpack 插件，用于生成客户端打包后的每个页面的 chunk 信息 stats.json
+服务端提供了 collectChunk 的函数,能夠從 stats.json 中提取出當前要渲染的頁面組件，已经当前页面需要的 js 和 css 静态文件
+为了解决重用问题，loadableReady 函数等待组件加载成功之后才开始渲染页面
