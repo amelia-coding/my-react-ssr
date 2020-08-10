@@ -145,5 +145,5 @@ CSS 的多核压缩 optimize-css-assets-webpack-plugin
 
 loadable:
 提供了一个 webpack 插件，用于生成客户端打包后的每个页面的 chunk 信息 stats.json
-服务端提供了 collectChunk 的函数,能夠從 stats.json 中提取出當前要渲染的頁面組件，已经当前页面需要的 js 和 css 静态文件
+服务端提供了 collectChunk 的函数,能夠從 stats.json 中提取出當前要渲染的頁面組件，以及当前页面需要的 js 和 css 静态文件
 为了解决重用问题，loadableReady 函数等待组件加载成功之后才开始渲染页面
